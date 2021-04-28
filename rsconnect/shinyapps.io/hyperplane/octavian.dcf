@@ -1,0 +1,12 @@
+name: octavian
+title: octavian
+username:
+account: hyperplane
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4046365
+bundleId: 4530972
+url: https://hyperplane.shinyapps.io/octavian/
+when: 1619628745.58887
+asMultiple: FALSE
+asStatic: FALSE
