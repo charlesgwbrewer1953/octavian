@@ -5,8 +5,8 @@ account: hyperplane
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4046365
-bundleId: 4531102
+bundleId: 4531224
 url: https://hyperplane.shinyapps.io/octavian/
-when: 1619630803.59513
+when: 1619632458.01891
 asMultiple: FALSE
 asStatic: FALSE
