@@ -1,8 +1,8 @@
 #
 #
-# selectRetrieve7
+# soctavian
 # Git
-# /Developmnt/metis_dev2/selectRetrieve5
+# /OneDrive/metis2/metic_select_retrieve/octavian
 # - resegment_observe branch
 
 # SERVER

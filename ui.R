@@ -2,7 +2,7 @@
 #
 # octavian
 # Git
-# /OneDrive/metis2/metis_select_retrieve
+# /OneDrive/metis2/metic_select_retrieve/octavian
 # - resegment_observe branch
 
 # SERVER
@@ -15,6 +15,20 @@
 
 
 library(shiny)
+library(shinydashboard)
+Sys.setlocale('LC_ALL','C')
+library(shiny)
+library(pool)
+library(tidyverse)
+library(DBI)
+library(zoo)
+library(shinysky)
+library(reshape2)
+library(shinythemes)
+library(shinyWidgets)
+library(MASS)
+library(plotly)
+#library(ggpubr)
 
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
