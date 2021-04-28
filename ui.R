@@ -30,25 +30,163 @@ library(MASS)
 library(plotly)
 #library(ggpubr)
 
-# Define UI for application that draws a histogram
-shinyUI(fluidPage(
+dashboardPage(
+    skin = "red",
 
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+    dashboardHeader(title = "Media Sentiment Analysis", titleWidth = 450),
+    dashboardSidebar(
+        dateRangeInput(inputId= 'dateRange',
+                       label = "Date range",
+                       start = Sys.Date() - 14,
+                       format = "yyyy_mm_dd"),
+        numericInput(inputId = "dateGrouping",
+                     "Rolling average ",
+                     value = 5,
+                     min = 1,
+                     max = 90)
+    ),
+    #    print("ui 1 - Start of page"),
+    ######
+    dashboardBody(fluidRow(
+        print("ui 2 - Selectize items"),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Selection 1",
+                   tags$h3("Selection 1"),
+                   selectizeInput("isource",
+                                  "Source 1",
+                                  choices = rssSources.names,
+                                  multiple = TRUE),
+                   selectizeInput("isourcetype",
+                                  "Source Type 1",
+                                  choices = rss.SourceTypes,
+                                  multiple = TRUE),
+                   selectizeInput("icountry",
+                                  "Country 1",
+                                  choices = rss.Countries,
+                                  multiple = TRUE),
+                   selectizeInput("iregion",
+                                  'Region 1', choices = rss.Regions,
+                                  multiple = TRUE),
+                   selectizeInput("iorientation",
+                                  "Orientation 1",
+                                  choices = rss.Orientation,
+                                  multiple = TRUE),
+                   selectizeInput("iSentimentFactor",
+                                  "Sentiment factor 1",
+                                  c("Syuzhet" = 'syuzhet', "Afinn" = "afinn","Bing" = "bing", "Anger - nrc" = "nrc_anger","Anticipation - nrc" = "nrc_anticipation","Disgust - nrc" = "nrc_disgust",
+                                    "Fear - nrc" = "nrc_fear", "Joy - nrc" = "nrc_joy","Positive- nrc"= "nrc_positive","Negative - nrc" = "nrc_negative","Sadness - nrc" = "nrc_sadness",
+                                    "Surprise - nrc" = "nrc_surprise", "Trust - nrc" = "nrc_trust","Constraining - Lo" = "loughran_constraining","Litigous - Lo" = "loughran_litigious",
+                                    "Uncertain- Lo" = "loughran_uncertain", "Negative - Lo" = "loughran_negative","Positive - Lo" = "loughran_positive", "Ensemble +/-" = "ensemble_posneg") ,
+                                  multiple = TRUE,
+                                  selected = "ensemble_posneg"),
+                   textInput("itextinput",
+                             "Text selection 1",
+                             value = " ")
+               )
         ),
+        print("ui 2.1 - between Selectize 1 and 2"),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Selection 2",
+                   tags$h3("Selection 2"),
+                   selectizeInput("isource2",
+                                  "Source 2",
+                                  choices = rssSources.names,
+                                  multiple = TRUE),
+                   selectizeInput("isourcetype2",
+                                  "Source Type 2",
+                                  choices = rss.SourceTypes,
+                                  multiple = TRUE),
+                   selectizeInput("icountry2",
+                                  "Country 2",
+                                  choices = rss.Countries,
+                                  multiple = TRUE),
+                   selectizeInput("iregion2",
+                                  'Region 2', choices = rss.Regions,
+                                  multiple = TRUE),
+                   selectizeInput("iorientation2",
+                                  "Orientation 2",
+                                  choices = rss.Orientation,
+                                  multiple = TRUE),
+                   selectizeInput("iSentimentFactor2",
+                                  "Sentiment factor 2",
+                                  c("Syuzhet" = 'syuzhet', "Afinn" = "afinn","Bing" = "bing", "Anger - nrc" = "nrc_anger","Anticipation - nrc" = "nrc_anticipation","Disgust - nrc" = "nrc_disgust",
+                                    "Fear - nrc" = "nrc_fear", "Joy - nrc" = "nrc_joy","Positive- nrc"= "nrc_positive","Negative - nrc" = "nrc_negative","Sadness - nrc" = "nrc_sadness",
+                                    "Surprise - nrc" = "nrc_surprise", "Trust - nrc" = "nrc_trust","Constraining - Lo" = "loughran_constraining","Litigous - Lo" = "loughran_litigious",
+                                    "Uncertain- Lo" = "loughran_uncertain", "Negative - Lo" = "loughran_negative","Positive - Lo" = "loughran_positive", "Ensemble +/-" = "ensemble_posneg") ,
+                                  multiple = TRUE,
+                                  selected = "ensemble_posneg"),
+                   textInput("itextinput2",
+                             "Text selection 2",
+                             value = " ")
+               )
+        ),
+        column(width = 2,
+               dropdown(
+                   print("ui 3 - Strt of dropdowns"),
+                   tootip = TRUE,
+                   label = "Smooth/Corr",
+                   tags$h3("Smoothing"),
+                   radioButtons("ismooth", "Method",
+                                c("None"= "", "loess" = "loess", "lm" = "lm","gam" = "gam", "glm" = "glm", "MASS:rlm" = "MASS:rlm" )),
 
-        # Show a plot of the generated distribution
-        mainPanel(
-            plotOutput("distPlot")
-        )
+                   numericInput("iconfidenceLevel", label = "Confidence value", value = 0.95, min = 0, max = 1, width = "30%" ),
+                   checkboxInput("iconfidence", label = "On", FALSE),
+                   tags$h3("Correlation"),
+                   selectizeInput("icorrelate", label = "Method", c("pearson", "kendall", "spearman"), multiple = FALSE),
+                   selectizeInput("icorr.alternate", label = "Alternative", c("two.sided", "greater", "less"))
+               )),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Normalize",
+                   fluidRow(
+                       tags$h3("Normalise"),
+                       checkboxInput("iPosNegNorm", "Pos/neg"),
+                       checkboxInput("iLRCNorm", "Orientation"),
+                       checkboxInput("iCountryNorm", "Countries"))
+               )),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Format",
+                   fluidRow(
+                       tags$h3("Chart format"),
+                       tags$h5("Time Series"),
+                       checkboxInput("aColumn", "Column", FALSE),
+                       checkboxInput("aLine", "Line", TRUE),
+                       #                      checkboxInput("aDensity", "Density", FALSE),
+                       checkboxInput("aPoint", "Points", FALSE),
+                       tags$h5("Correlation"),
+                       checkboxInput("aStar", "Star", FALSE)
+                   )
+
+               ))),
+
+        # fluidRow(
+        #     print("ui 4 - utput generation"),
+        #     h4("Comparative"),
+        #     column(width = 6, plotlyOutput("SA_by_date_line_comp")),
+        #     column(width = 4, plotlyOutput("SA_correlation")),
+        #     column(width = 2, DT::dataTableOutput("corrStats"))
+        # ),
+        # h4("Selection 1"),
+        # fluidRow(
+        #     column(width = 6, plotlyOutput("SA_by_date_line")),
+        #
+        #     column(width = 6, plotlyOutput("SA_summary_by_period"))),
+        # h4("Selection 2"),
+        # print("ui 4.1 - Output generation"),
+        # fluidRow(
+        #     column(width = 6, plotlyOutput("SA_by_date_line2")),
+        #     column(width = 6, plotlyOutput("SA_summary_by_period2"))),
+        #
+        #
+        # h4("Sources"),
+        # print("ui 4.3 - Output generation"),
+
     )
-))
+)
