@@ -48,8 +48,7 @@ dashboardPage(
     #    print("ui 1 - Start of page"),
     ######
      dashboardBody(fluidRow(
-        print("ui 2 - Selectize items"),
-        print("ui2.1"),
+
         column(width = 2,
                dropdown(
  #                  tooltip = TRUE,
@@ -88,7 +87,7 @@ dashboardPage(
                              value = " ")
                )
         ),
-        print("ui 2.1 - between Selectize 1 and 2"),
+
         column(width = 2,
                dropdown(
                    tooltip = TRUE,
@@ -126,69 +125,69 @@ dashboardPage(
                              value = " ")
                )
         ),
-    #     column(width = 2,
-    #            dropdown(
-    #                print("ui 3 - Strt of dropdowns"),
-    #                tootip = TRUE,
-    #                label = "Smooth/Corr",
-    #                tags$h3("Smoothing"),
-    #                radioButtons("ismooth", "Method",
-    #                             c("None"= "", "loess" = "loess", "lm" = "lm","gam" = "gam", "glm" = "glm", "MASS:rlm" = "MASS:rlm" )),
-    #
-    #                numericInput("iconfidenceLevel", label = "Confidence value", value = 0.95, min = 0, max = 1, width = "30%" ),
-    #                checkboxInput("iconfidence", label = "On", FALSE),
-    #                tags$h3("Correlation"),
-    #                selectizeInput("icorrelate", label = "Method", c("pearson", "kendall", "spearman"), multiple = FALSE),
-    #                selectizeInput("icorr.alternate", label = "Alternative", c("two.sided", "greater", "less"))
-    #            )),
-    #     column(width = 2,
-    #            dropdown(
-    #                tooltip = TRUE,
-    #                label = "Normalize",
-    #                fluidRow(
-    #                    tags$h3("Normalise"),
-    #                    checkboxInput("iPosNegNorm", "Pos/neg"),
-    #                    checkboxInput("iLRCNorm", "Orientation"),
-    #                    checkboxInput("iCountryNorm", "Countries"))
-    #            )),
-    #     column(width = 2,
-    #            dropdown(
-    #                tooltip = TRUE,
-    #                label = "Format",
-    #                fluidRow(
-    #                    tags$h3("Chart format"),
-    #                    tags$h5("Time Series"),
-    #                    checkboxInput("aColumn", "Column", FALSE),
-    #                    checkboxInput("aLine", "Line", TRUE),
-    #                    #                      checkboxInput("aDensity", "Density", FALSE),
-    #                    checkboxInput("aPoint", "Points", FALSE),
-    #                    tags$h5("Correlation"),
-    #                    checkboxInput("aStar", "Star", FALSE)
-    #                )
-    #
-    #            ))),
+        column(width = 2,
+               dropdown(
+                   print("ui 3 - Strt of dropdowns"),
+                   tootip = TRUE,
+                   label = "Smooth/Corr",
+                   tags$h3("Smoothing"),
+                   radioButtons("ismooth", "Method",
+                                c("None"= "", "loess" = "loess", "lm" = "lm","gam" = "gam", "glm" = "glm", "MASS:rlm" = "MASS:rlm" )),
 
-        # fluidRow(
-        #     print("ui 4 - utput generation"),
-        #     h4("Comparative"),
-        #     column(width = 6, plotlyOutput("SA_by_date_line_comp")),
-        #     column(width = 4, plotlyOutput("SA_correlation")),
-        #     column(width = 2, DT::dataTableOutput("corrStats"))
-        # ),
-        # h4("Selection 1"),
-        # fluidRow(
-        #     column(width = 6, plotlyOutput("SA_by_date_line")),
-        #
-        #     column(width = 6, plotlyOutput("SA_summary_by_period"))),
-        # h4("Selection 2"),
-        # print("ui 4.1 - Output generation"),
-        # fluidRow(
-        #     column(width = 6, plotlyOutput("SA_by_date_line2")),
-        #     column(width = 6, plotlyOutput("SA_summary_by_period2"))),
-        #
-        #
-        # h4("Sources"),
-        # print("ui 4.3 - Output generation"),
+                   numericInput("iconfidenceLevel", label = "Confidence value", value = 0.95, min = 0, max = 1, width = "30%" ),
+                   checkboxInput("iconfidence", label = "On", FALSE),
+                   tags$h3("Correlation"),
+                   selectizeInput("icorrelate", label = "Method", c("pearson", "kendall", "spearman"), multiple = FALSE),
+                   selectizeInput("icorr.alternate", label = "Alternative", c("two.sided", "greater", "less"))
+               )),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Normalize",
+                   fluidRow(
+                       tags$h3("Normalise"),
+                       checkboxInput("iPosNegNorm", "Pos/neg"),
+                       checkboxInput("iLRCNorm", "Orientation"),
+                       checkboxInput("iCountryNorm", "Countries"))
+               )),
+        column(width = 2,
+               dropdown(
+                   tooltip = TRUE,
+                   label = "Format",
+                   fluidRow(
+                       tags$h3("Chart format"),
+                       tags$h5("Time Series"),
+                       checkboxInput("aColumn", "Column", FALSE),
+                       checkboxInput("aLine", "Line", TRUE),
+                       #                      checkboxInput("aDensity", "Density", FALSE),
+                       checkboxInput("aPoint", "Points", FALSE),
+                       tags$h5("Correlation"),
+                       checkboxInput("aStar", "Star", FALSE)
+                   )
 
-    ))
+               ))),
+
+        fluidRow(
+            print("ui 4 - utput generation"),
+            h4("Comparative"),
+            column(width = 6, plotlyOutput("SA_by_date_line_comp")),
+            column(width = 4, plotlyOutput("SA_correlation")),
+            column(width = 2, DT::dataTableOutput("corrStats"))
+        ),
+        h4("Selection 1"),
+        fluidRow(
+            column(width = 6, plotlyOutput("SA_by_date_line")),
+
+            column(width = 6, plotlyOutput("SA_summary_by_period"))),
+        h4("Selection 2"),
+        print("ui 4.1 - Output generation"),
+        fluidRow(
+            column(width = 6, plotlyOutput("SA_by_date_line2")),
+            column(width = 6, plotlyOutput("SA_summary_by_period2"))),
+
+
+        h4("Sources"),
+        print("ui 4.3 - Output generation"),
+
+    )
 )
