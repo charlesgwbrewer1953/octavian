@@ -16,6 +16,7 @@
 library(shiny)
 library(tidyverse)
 library(RMariaDB)
+library(rlang)
 
 print( "Global 0 - About to connect - Server/Remote 1")
 # Establish connection to Digital Ocean (remote) database
@@ -59,7 +60,9 @@ dbQuery <- dbSendQuery(conR, "SELECT * FROM rssSources")
 rssSources <- dbFetch(dbQuery)
 print("RSS Feeds static data retrieved")
 rssSources.names <- unique(dplyr::select(rssSources,Feed))
-rssSources.names <- sort(rssSources.names[,1])
+rssSources.names <- as_tibble(sort(rssSources.names[,1]))
+colnames(rssSources.names) <- "cname"
+rssSources.names$cname <- as_utf8_character(rssSources.names$cname)
 rss.SourceTypes <- unique(dplyr::select(rssSources,SourceType))
 rss.SourceTypes <- sort(rss.SourceTypes[,1])
 rss.Countries <- unique(dplyr::select(rssSources,Country))
@@ -69,6 +72,8 @@ rss.Regions <- sort(rss.Regions[,1])
 rss.Orientation <- unique(dplyr::select(rssSources,Orientation))
 rss.Orientation <- sort(rss.Orientation[,1])
 rss.Lookups <- unique(dplyr::select(rssSources,URL, Orientation))
+
+
 
 # f <- list(
 #         family = sans
