@@ -1,6 +1,6 @@
 #
 #
-# soctavian
+# octavian
 # Git
 # /OneDrive/metis2/metic_select_retrieve/octavian
 # - resegment_observe branch
@@ -46,15 +46,6 @@ sa_method_norm2 <- function(score_name1, score_name2){
   score_adjust <- score_neg/score_pos
 }
 
-
-# print("About to connect - Gobal/Remote")
-# # Establish connection to Digital Ocean (remote) database
-# remoteuserpassword <- "m3t1sz"
-# conR <- dbConnect(RMariaDB::MariaDB(), dbname = 'metis', 'metis', password = remoteuserpassword, host = "178.62.8.181", port = 3306)
-# print(" GLOBAL - Connected remote 1")
-# dbListTables(conR)
-
-
 # Retrieve RSS feed static data
 dbQuery <- dbSendQuery(conR, "SELECT * FROM rssSources")
 rssSources <- dbFetch(dbQuery)
@@ -74,8 +65,4 @@ rss.Orientation <- sort(rss.Orientation[,1])
 rss.Lookups <- unique(dplyr::select(rssSources,URL, Orientation))
 
 
-
-# f <- list(
-#         family = sans
-# )
 

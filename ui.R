@@ -28,7 +28,7 @@ library(shinythemes)
 library(shinyWidgets)
 library(MASS)
 library(plotly)
-#library(ggpubr)
+library(ggpubr)
 
 dashboardPage(
     skin = "red",
@@ -127,7 +127,6 @@ dashboardPage(
         ),
         column(width = 2,
                dropdown(
-                   print("ui 3 - Strt of dropdowns"),
                    tootip = TRUE,
                    label = "Smooth/Corr",
                    tags$h3("Smoothing"),
@@ -159,7 +158,6 @@ dashboardPage(
                        tags$h5("Time Series"),
                        checkboxInput("aColumn", "Column", FALSE),
                        checkboxInput("aLine", "Line", TRUE),
-                       #                      checkboxInput("aDensity", "Density", FALSE),
                        checkboxInput("aPoint", "Points", FALSE),
                        tags$h5("Correlation"),
                        checkboxInput("aStar", "Star", FALSE)
@@ -168,7 +166,6 @@ dashboardPage(
                ))),
 
         fluidRow(
-            print("ui 4 - utput generation"),
             h4("Comparative"),
             column(width = 6, plotlyOutput("SA_by_date_line_comp")),
             column(width = 4, plotlyOutput("SA_correlation")),
@@ -180,14 +177,14 @@ dashboardPage(
 
             column(width = 6, plotlyOutput("SA_summary_by_period"))),
         h4("Selection 2"),
-        print("ui 4.1 - Output generation"),
         fluidRow(
             column(width = 6, plotlyOutput("SA_by_date_line2")),
             column(width = 6, plotlyOutput("SA_summary_by_period2"))),
 
 
         h4("Sources"),
-        print("ui 4.3 - Output generation"),
+        DT::dataTableOutput("tbl")
+
 
     )
 )

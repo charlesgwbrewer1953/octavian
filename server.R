@@ -37,7 +37,7 @@ shinyServer(function(input, output, session) {
     #                         #
     ###########################
 
-    #
+    # User parameter selection
 
     rssSelection <- function(rssSelected,  Source, Orientation, SourceType, Country, Region, Topic){
         print("server 2 - RSS select")
@@ -99,6 +99,7 @@ shinyServer(function(input, output, session) {
     }
 
     # Compute aggregated data for time period
+
     f.totVals <- function(query_in){
         totVals <- query_in %>% gather(syuzhet_score, afinn_score, bing_score,
                                        nrc_score_anger, nrc_score_anticipation, nrc_score_disgust, nrc_score_fear,
@@ -140,6 +141,7 @@ shinyServer(function(input, output, session) {
     })
 
     # Graphic output for charts
+
     time_Series_graph <- function(sumVals, gtitle, line_col, point_col, point_fill){
         p <- ggplot(sumVals,
                     aes(x = item_date_published, y = rollmean(factorValue, input$dateGrouping, na.pad = TRUE) )) +
