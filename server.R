@@ -140,7 +140,7 @@ shinyServer(function(input, output, session) {
         outSeq <- paste0("sa_RSS_library", outSeq, sep = "")
     })
 
-    # Graphic output for charts
+    # Graphic output for charts Row 2/3
 
     time_Series_graph <- function(sumVals, gtitle, line_col, point_col, point_fill){
         p <- ggplot(sumVals,
@@ -384,7 +384,7 @@ shinyServer(function(input, output, session) {
         dataSelection <- rbind(v1, v2)
         query_out_List
     })
-    ### Comparison chart
+    ### COUTPUT LINE 1 omparison chart
     output$SA_by_date_line_comp <- renderPlotly({
         sumValsA <- filter(sumVals(), factorName %in% input$iSentimentFactor )
         sumValsA <-mutate(sumValsA, Selection = "1")
@@ -399,10 +399,12 @@ shinyServer(function(input, output, session) {
             mutate(mov_avg = rollmean(factorValue, input$dateGrouping, fill = 0)) %>%
             ggplot(aes(x = item_date_published, y = factorValue, group = Selection, fill = Selection, colour = Selection)) +
             xlab("Story date") + ylab("Factor score") +
+            theme(legend.position = c(0,0)) +
             geom_smooth(method = input$ismooth, fullrange = TRUE,  show.legend = TRUE,se = input$iconfidence,
                         level = input$iconfidenceLevel, aes(colour = Selection)) +
-            ggtitle(paste("Time series analysis")) +
+            ggtitle(paste("Time series analysis", "No R/A")) +
             theme(legend.title = element_text(size = 8),
+                  legend.position = c(0,0),
                   axis.title.x = element_text(size = 8),
                   axis.title.y = element_text(size = 8),
                   plot.title = element_text(size = 12)
@@ -412,9 +414,12 @@ shinyServer(function(input, output, session) {
         if(isTRUE(input$aLine)){(p <- p + geom_line())}
         #        if(isTRUE(input$aDensity)){(p <- p + geom_density(aes(y = factorValue)))}
         if(isTRUE(input$aPoint)){(p <- p + geom_point(size = 4, shape = 22, colour = "darkblue", fill = "azure"))}
+        p + theme(legend.position = c(0.1, 0.1))
         p
     })
 
+
+    ########  Correlation plot
     output$SA_correlation <- renderPlotly({
         print("server 5 - SA_correlation")
         sumValsA <- filter(sumVals(), factorName %in% input$iSentimentFactor )
@@ -452,7 +457,7 @@ shinyServer(function(input, output, session) {
         if(isTRUE(input$aPoint)){(p <- p + geom_point(size = 4, shape = 22, colour = "darkgreen", fill = "darkseagreen"))}
         #       p + stat_cor( method = input$icorrelate, aes(label = ..r.label.., label.x = 3, label.y = 30),output.type = "expression", p.accuracy = 0.001, r.accuracy = 0.001)
         return(p)
-    })
+    })  ######  End of correlation plot
 
 
 
@@ -488,11 +493,14 @@ shinyServer(function(input, output, session) {
                                           list( method, alternative,statistic,
                                                 p.value, estimate, conf.int)))
         row.names(cor.text) <- c( "Method", "Alternative","Statistic", "p-value", "estimate", "conf int")
+        if(input$icorrelate == "pearson"){cor.text <- select(cor.text, V2)}
         cor.text
+
+
 
     })
 
-    ################### Single factor charts
+    ################### OUTPUT LINE 2-3 Single factor charts
 
     # First choice line chart
     output$SA_by_date_line <- renderPlotly({
@@ -505,7 +513,7 @@ shinyServer(function(input, output, session) {
     # Second choice line chart
     output$SA_by_date_line2 <- renderPlotly({
         sumVals <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
-        gtitle <- paste("Time series analysis / \nMoving average 2 \nComparison", input$ismooth)
+        ggtitle <- paste(c("Time series analysis Moving average ", input$ismooth))
         p <- time_Series_graph(sumVals, gtitle, "blue", "deepskyblue", point_fill = "dodgerblue4")
         p
     })

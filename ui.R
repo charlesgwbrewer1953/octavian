@@ -164,7 +164,7 @@ dashboardPage(
                    )
 
                ))),
-
+#################### Chart section
         fluidRow(
             h4("Comparative"),
             column(width = 6, plotlyOutput("SA_by_date_line_comp")),
@@ -180,6 +180,15 @@ dashboardPage(
         fluidRow(
             column(width = 6, plotlyOutput("SA_by_date_line2")),
             column(width = 6, plotlyOutput("SA_summary_by_period2"))),
+
+#################### Autocorrelation
+
+print("ui 4.2 - Output generation"),
+       fluidRow(
+           h4("Autocorrelation"),
+           column(width = 6, plotOutput("ACF1_large")),
+           column(width = 6, plotOutput("ACF2_large"))
+),
 
 
         h4("Sources"),
