@@ -69,7 +69,7 @@ shinyServer(function(input, output, session) {
     f.sumVals <- function(query_in) {
         sumVals <- query_in %>%
             group_by(item_date_published) %>%
-            summarize(
+            dplyr::summarize(
                 syuzhet = sum(syuzhet_score),
                 afinn = sum(afinn_score),
                 bing = sum(bing_score),
@@ -90,7 +90,10 @@ shinyServer(function(input, output, session) {
                 loughran_uncertain = sum(loughran_frame_uncertain),
                 ensemble_posneg = sum(ensemble_posneg)
             )
+        print("Line 93")
+        print(sumVals$item_date_published)
         sumVals <- dplyr::filter(sumVals, item_date_published >= input$dateRange[1]) # Remove items before selection date
+        print("Line 95")
         sumVals <-sumVals %>% gather('syuzhet', 'afinn', 'bing', 'nrc_anger', 'nrc_anticipation', 'nrc_disgust', 'nrc_fear', 'nrc_joy',
                                      'nrc_positive', 'nrc_negative', 'nrc_sadness', 'nrc_surprise', 'nrc_trust', 'loughran_constraining',
                                      'loughran_litigious', 'loughran_negative', 'loughran_positive', 'loughran_uncertain','ensemble_posneg', key = "factorName", value = 'factorValue')
