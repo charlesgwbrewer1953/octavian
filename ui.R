@@ -29,6 +29,7 @@ library(shinyWidgets)
 library(MASS)
 library(plotly)
 library(ggpubr)
+library(ggbiplot)
 
 dashboardPage(
     skin = "red",
@@ -43,13 +44,21 @@ dashboardPage(
                      "Rolling average ",
                      value = 5,
                      min = 1,
-                     max = 90)
+                     max = 90),
+        sidebarMenu(
+            menuItem("Comparison", tabName = "comparison", icon = icon("chart-line")),
+            menuItem("Individual", tabName = "individual", icon = icon("dashboard")),
+            menuItem("Sentiment", tabName = "sentiment", icon = icon("dashboard")),
+            menuItem("Correlation", tabname = "correlation", icon = icon("dashboard")),
+            menuItem("Source", tabName = "source", icon = icon("dashboard"))
+        )
     ),
     #    print("ui 1 - Start of page"),
     ######
-     dashboardBody(fluidRow(
+     dashboardBody(
 
-        column(width = 2,
+         ##### Dropdown selection items
+         fluidRow(column(width = 2,
                dropdown(
  #                  tooltip = TRUE,
                    label = "Selection 1",
@@ -165,12 +174,16 @@ dashboardPage(
 
                ))),
 #################### Chart section
-        fluidRow(
-            h4("Comparative"),
-            column(width = 6, plotlyOutput("SA_by_date_line_comp")),
-            column(width = 4, plotlyOutput("SA_correlation")),
-            column(width = 2, DT::dataTableOutput("corrStats"))
+
+
+
+    fluidRow(
+            h4("Comparative content"),
+            column(width = 12, plotlyOutput("SA_by_date_line_comp"))
+
         ),
+              # End of tab 1
+
         h4("Selection 1"),
         fluidRow(
             column(width = 6, plotlyOutput("SA_by_date_line")),
@@ -180,20 +193,33 @@ dashboardPage(
         fluidRow(
             column(width = 6, plotlyOutput("SA_by_date_line2")),
             column(width = 6, plotlyOutput("SA_summary_by_period2"))),
+              # End of tab 2
 
-#################### Autocorrelation
 
-print("ui 4.2 - Output generation"),
        fluidRow(
            h4("Autocorrelation"),
            column(width = 6, plotOutput("ACF1_large")),
            column(width = 6, plotOutput("ACF2_large"))
-),
+       ),
+        h4("Statistics"),
+        fluidRow(
+            column(width = 8, plotlyOutput("SA_correlation")),
+            column(width = 4, DT::dataTableOutput("corrStats"))
+        ),
 
+
+        fluidRow(
+            h4("Cluster"),
+            h5("Principal Component Analysis"),
+            column(width = 12, plotOutput("PCA"))
+        ),
+
+
+##################### Source
 
         h4("Sources"),
         DT::dataTableOutput("tbl")
+)
 
-
-    )
+#    )
 )

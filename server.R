@@ -585,9 +585,26 @@ shinyServer(function(input, output, session) {
         p
     })
 
+    ##########################  Principal componenet analysis
+
+    output$PCA <- renderPlot({
+        query_in <- rssSelection(query_out_Date(), input$isource, input$iorientation,input$isourcetype, input$icountry,input$iregion, input$itextinput)
+        cluster_frame <- unique(query_in[,c('ext_name', 'orientation', 'country')])
+        print("Here PCA")
+        cluster_agg <- aggregate(query_in[,c(7:23)], by = list(ext_name=query_in$ext_name), sum)
+        cluster_merge <- merge(cluster_agg, cluster_frame)
+        cluster_merge_x <- cluster_merge[,2:18]
+        cluster_clean <- cluster_merge_x[,apply(cluster_merge_x, 2, var, na.rm = TRUE) !=0]
+        model <- prcomp(cluster_clean)
+        p <- ggbiplot(model)
+        p
+
+    })
+
     ##########################
 
     output$tbl <- DT::renderDT({
+        print("Got to the end")
         stories1 <- rssSelection(query_out_Date(), input$isource,input$isourcetype, input$orientation, input$icountry, input$iregion, input$itextinput)
         stories2 <- rssSelection(query_out_Date(), input$isource2,input$isourcetype2, input$orientation2, input$icountry2, input$iregion2, input$itextinput2)
         stories <- rbind(stories1, stories2)
