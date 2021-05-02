@@ -56,7 +56,6 @@ dashboardPage(
     #    print("ui 1 - Start of page"),
     ######
      dashboardBody(
-
          ##### Dropdown selection items
          fluidRow(column(width = 2,
                dropdown(

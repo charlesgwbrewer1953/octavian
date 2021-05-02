@@ -42,15 +42,15 @@ shinyServer(function(input, output, session) {
     rssSelection <- function(rssSelected,  Source, Orientation, SourceType, Country, Region, Topic){
         print("server 2 - RSS select")
         ifelse(is.null(Source), rssSelected <- rssSelected,
-               rssSelected <- filter(rssSelected, Source == ext_name))
+               rssSelected <- dplyr::filter(rssSelected, Source == ext_name))
         ifelse(is.null(Orientation), rssSelected <- rssSelected,
-               rssSelected <- filter(rssSelected, Orientation == orientation))
+               rssSelected <- dplyr::filter(rssSelected, Orientation == orientation))
         ifelse(is.null(SourceType), rssSelected <- rssSelected,
-               rssSelected <- filter(rssSelected, SourceType == SourceType))
+               rssSelected <- dplyr::filter(rssSelected, SourceType == SourceType))
         ifelse(is.null(Country), rssSelected <- rssSelected,
-               rssSelected <- filter(rssSelected, Country  == country))
+               rssSelected <- dplyr::filter(rssSelected, Country  == country))
         ifelse(is.null(Region), rssSelected <- rssSelected,
-               rssSelected <- filter(rssSelected, Region == Region))
+               rssSelected <- dplyr::filter(rssSelected, Region == Region))
         ifelse(is.null(Topic), rssSelected <- rssSelected,
                rssSelected<- dplyr::filter(rssSelected, str_detect(rssSelected[,"item_title"], regex(Topic, ignore_case = TRUE))))
         return(rssSelected)
@@ -90,7 +90,7 @@ shinyServer(function(input, output, session) {
                 loughran_uncertain = sum(loughran_frame_uncertain),
                 ensemble_posneg = sum(ensemble_posneg)
             )
-        sumVals <- filter(sumVals, item_date_published >= input$dateRange[1]) # Remove items before selection date
+        sumVals <- dplyr::filter(sumVals, item_date_published >= input$dateRange[1]) # Remove items before selection date
         sumVals <-sumVals %>% gather('syuzhet', 'afinn', 'bing', 'nrc_anger', 'nrc_anticipation', 'nrc_disgust', 'nrc_fear', 'nrc_joy',
                                      'nrc_positive', 'nrc_negative', 'nrc_sadness', 'nrc_surprise', 'nrc_trust', 'loughran_constraining',
                                      'loughran_litigious', 'loughran_negative', 'loughran_positive', 'loughran_uncertain','ensemble_posneg', key = "factorName", value = 'factorValue')
@@ -363,6 +363,7 @@ shinyServer(function(input, output, session) {
             query_out_frame$nrc_comp/nrc.norm + query_out_frame$loughran_comp/loughran.norm
 
         query_out_frame <- cbind(query_out_frame, rssSources[match(query_out_frame$ext_name, rssSources$Feed), c(6,7)]) # Add region and source type
+        print("End of query_out_Date")
         query_out_frame # returned
 
         # end of read DB loop
@@ -386,9 +387,9 @@ shinyServer(function(input, output, session) {
     })
     ### COUTPUT LINE 1 omparison chart
     output$SA_by_date_line_comp <- renderPlotly({
-        sumValsA <- filter(sumVals(), factorName %in% input$iSentimentFactor )
+        sumValsA <- dplyr::filter(sumVals(), factorName %in% input$iSentimentFactor )
         sumValsA <-mutate(sumValsA, Selection = "1")
-        sumValsB <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
+        sumValsB <- dplyr::filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
         sumValsB <-mutate(sumValsB, Selection = "2")
         sumVals <- rbind(sumValsA, sumValsB)
         if(isTRUE(input$iPosNegNorm)){
@@ -422,10 +423,10 @@ shinyServer(function(input, output, session) {
     ########  Correlation plot
     output$SA_correlation <- renderPlotly({
         print("server 5 - SA_correlation")
-        sumValsA <- filter(sumVals(), factorName %in% input$iSentimentFactor )
+        sumValsA <- dplyr::filter(sumVals(), factorName %in% input$iSentimentFactor )
         sumValsA <- mutate(sumValsA, SelectionA = "Selection 1")
         sumValsA <- mutate(sumValsA, rank_SFactorA = rank(factorValue))
-        sumValsB <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
+        sumValsB <- dplyr::filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
         sumValsB <- mutate(sumValsB, SelectionB = "Selection 2")
         sumValsB <- mutate(sumValsB, rank_SFactorB = rank(factorValue))
         sumValsX <- sumValsA %>%
@@ -468,10 +469,10 @@ shinyServer(function(input, output, session) {
         v2 <- c(input$isource2, input$isourcetype,input$icountry2, input$iregion2, input$iorientation2, input$itextinput2 )
         s <- c(input$icorrelate, input$icorr.alternative)
 
-        sumValsA <- filter(sumVals(), factorName %in% input$iSentimentFactor )
+        sumValsA <- dplyr::filter(sumVals(), factorName %in% input$iSentimentFactor )
         sumValsA <- mutate(sumValsA, SelectionA = "Selection 1")
         sumValsA <- mutate(sumValsA, rank_SFactorA = rank(factorValue))
-        sumValsB <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
+        sumValsB <- dplyr::filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
         sumValsB <- mutate(sumValsB, SelectionB = "Selection 2")
         sumValsB <- mutate(sumValsB, rank_SFactorB = rank(factorValue))
         sumValsX <- sumValsA %>%
@@ -505,14 +506,14 @@ shinyServer(function(input, output, session) {
     # First choice line chart
     output$SA_by_date_line <- renderPlotly({
         z <- c(input$aColumn, input$aLine, input$aPoint)
-        sumVals <- filter(sumVals(), factorName %in% input$iSentimentFactor )
+        sumVals <- dplyr::filter(sumVals(), factorName %in% input$iSentimentFactor )
         gtitle <- paste("Time series analysis / \nMoving average 1 \nComparison", input$ismooth)
         p <- time_Series_graph(sumVals, gtitle, "red", "firebrick4", point_fill = "deeppink")
         p
     })
     # Second choice line chart
     output$SA_by_date_line2 <- renderPlotly({
-        sumVals <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
+        sumVals <- dplyr::filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
         ggtitle <- paste(c("Time series analysis Moving average ", input$ismooth))
         p <- time_Series_graph(sumVals, gtitle, "blue", "deepskyblue", point_fill = "dodgerblue4")
         p
@@ -567,7 +568,7 @@ shinyServer(function(input, output, session) {
         v2 <- c(input$isource2, input$isourcetype,input$icountry2, input$iregion2, input$iorientation2, input$itextinput2 )
         s <- c(input$icorrelate, input$icorr.alternative)
 
-        sumVals <- filter(sumVals(), factorName %in% input$iSentimentFactor )
+        sumVals <- dplyr::filter(sumVals(), factorName %in% input$iSentimentFactor )
         print("Got here")
         p <- ggplot.corr(sumVals$factorValue, lag.max = 124, ci = 0.95, large.sample.size = TRUE, horizontal = TRUE, title_line = "Selection 1") +
             ggtitle("Autocorrelation / Selection 1")
@@ -577,7 +578,7 @@ shinyServer(function(input, output, session) {
 
     output$ACF2_large <- renderPlot({
 
-        sumVals <- filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
+        sumVals <- dplyr::filter(sumVals2(), factorName %in% input$iSentimentFactor2 )
         print("Got here2")
         p <- ggplot.corr(sumVals$factorValue, lag.max = 124, ci = 0.95, large.sample.size = TRUE, horizontal = TRUE, title_line = "Selection 2") +
             ggtitle("Autocorrelation / Selection 2")
