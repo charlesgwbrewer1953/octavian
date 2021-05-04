@@ -30,6 +30,7 @@ library(MASS)
 library(plotly)
 library(ggpubr)
 library(ggbiplot)
+library(ggrepel)
 
 dashboardPage(
     skin = "red",
@@ -209,8 +210,10 @@ dashboardPage(
 
         fluidRow(
             h4("Cluster"),
-            h5("Principal Component Analysis"),
-            column(width = 12, plotOutput("PCA"))
+
+            column(width = 4, plotOutput("PCA")),
+            column(width = 2, plotOutput("PCA_scree")),
+            column(width = 6, DT::dataTableOutput("PCA_tab"))
         ),
 
 

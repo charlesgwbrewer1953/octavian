@@ -600,9 +600,45 @@ shinyServer(function(input, output, session) {
         cluster_merge_x <- cluster_merge[,2:18]
         cluster_clean <- cluster_merge_x[,apply(cluster_merge_x, 2, var, na.rm = TRUE) !=0]
         model <- prcomp(cluster_clean)
-        p <- ggbiplot(model)
-        p
+        p <- ggbiplot(model, labels = rownames(model$scores) )
+        p + ggtitle("Principal Component Analysis")
+ #       p + geom_text_repel()
+    })
 
+    output$PCA_scree <-renderPlot({
+        query_in <- rssSelection(query_out_Date(), input$isource, input$iorientation,input$isourcetype, input$icountry,input$iregion, input$itextinput)
+        cluster_frame <- unique(query_in[,c('ext_name', 'orientation', 'country')])
+        print("Here PCA_2")
+   #     browser()
+        cluster_agg <- aggregate(query_in[,c(7:23)], by = list(ext_name=query_in$ext_name), sum)
+        cluster_merge <- merge(cluster_agg, cluster_frame)
+        cluster_merge_x <- cluster_merge[,2:18]  # Numeric values only
+        cluster_clean <- cluster_merge_x[,apply(cluster_merge_x, 2, var, na.rm = TRUE) !=0]
+        model <- prcomp(cluster_clean)
+        p <- plot(model, main = "PCA scree", las = 2)
+    })
+
+    output$PCA_tab <- DT::renderDT({
+        query_in <- rssSelection(query_out_Date(), input$isource, input$iorientation,input$isourcetype, input$icountry,input$iregion, input$itextinput)
+        cluster_frame <- unique(query_in[,c('ext_name', 'orientation', 'country')])
+        print("Here PCA_tab")
+        cluster_agg <- aggregate(query_in[,c(7:23)], by = list(ext_name=query_in$ext_name), sum)
+        cluster_merge <- merge(cluster_agg, cluster_frame)
+        cluster_merge_x <- cluster_merge[,2:18]
+        cluster_clean <- cluster_merge_x[,apply(cluster_merge_x, 2, var, na.rm = TRUE) !=0]
+
+        cluster_clean_1 <- cluster_clean
+        cluster_analysis <- factanal(cluster_clean_1, factors = 8)
+        PCA_tab_out <- cluster_analysis$loadings
+        r_l <- rownames(PCA_tab_out)
+        c_l <- colnames(PCA_tab_out)
+        PCA_tab_out_df <- as.data.frame(matrix(PCA_tab_out, length(r_l), length(c_l)))
+        rownames(PCA_tab_out_df) <- r_l
+        colnames(PCA_tab_out_df) <- c_l
+       print(PCA_tab_out_df)
+       typeof(PCA_tab_out_df)
+       PCA_tab_out_df
+       return(PCA_tab_out_df)
     })
 
     ##########################
